@@ -21,4 +21,8 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
     suspend fun update(workout: WorkoutModel) {
         workoutDao.update(workout)
     }
+
+    fun getWorkoutWithExercises(workoutId: Int): LiveData<WorkoutWithExercises> {
+        return workoutDao.getWorkoutWithExercises(workoutId)
+    }
 }

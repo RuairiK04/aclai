@@ -11,6 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Aclai">
+        <activity android:name=".AddEditUserActivity" />
+        <activity android:name=".AddEditExerciseActivity" />
         <activity android:name=".AddEditWorkoutActivity" />
         <activity
             android:name=".MainActivity"
@@ -23,6 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ExerciseActivity" />
     </application>
 
 </manifest>

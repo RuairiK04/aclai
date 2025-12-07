@@ -11,7 +11,7 @@ import androidx.room.RoomDatabase
         WorkoutModel::class,
         UserModel::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -33,7 +33,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "workout_tracker_database"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
 
                 INSTANCE = instance
 

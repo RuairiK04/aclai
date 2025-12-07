@@ -17,4 +17,10 @@ interface WorkoutDao {
 
     @Query("SELECT * FROM workoutTable ORDER BY id ASC")
     fun getAllWorkouts(): LiveData<List<WorkoutModel>>
+
+
+    @Transaction
+    @Query("SELECT * FROM workoutTable WHERE id = :workoutId")
+    fun getWorkoutWithExercises(workoutId: Int): LiveData<WorkoutWithExercises>
+
 }

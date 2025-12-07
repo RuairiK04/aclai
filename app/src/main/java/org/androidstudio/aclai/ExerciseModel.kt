@@ -1,16 +1,24 @@
 package org.androidstudio.aclai
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "exerciseTable")
-class ExerciseModel(
-    @ColumnInfo(name = "exerciseName") val exerciseName: String,
-    @ColumnInfo(name = "sets") val sets: Int,
-    @ColumnInfo(name = "reps") val reps: Int,
-    @ColumnInfo(name = "weight") val weight: Float
-) {
+@Entity(
+    tableName = "exercisesTable",
+    foreignKeys = [ForeignKey(
+        entity = WorkoutModel::class,
+        parentColumns = ["id"],
+        childColumns = ["workoutId"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
+data class ExerciseModel(
     @PrimaryKey(autoGenerate = true)
-    var id = 0
-}
+    val id: Int = 0,
+    val workoutId: Int,
+    val exerciseName: String,
+    val sets: Int,
+    val reps: Int,
+    val weight: Double
+)

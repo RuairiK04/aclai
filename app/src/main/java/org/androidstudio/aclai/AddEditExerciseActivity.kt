@@ -1,17 +1,24 @@
 package org.androidstudio.aclai
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AddEditExerciseActivity : AppCompatActivity() {
+
+    companion object {
+        const val EXTRA_WORKOUT_ID = "extra_workout_id"
+        const val EXTRA_EXERCISE_TYPE = "exerciseType"
+        const val EXTRA_EXERCISE_NAME = "exerciseName"
+        const val EXTRA_EXERCISE_SETS = "exerciseSets"
+        const val EXTRA_EXERCISE_REPS = "exerciseReps"
+        const val EXTRA_EXERCISE_WEIGHT = "exerciseWeight"
+        const val EXTRA_EXERCISE_ID = "exerciseId"
+    }
 
     private lateinit var exerciseNameEdt: EditText
     private lateinit var setsEdt: EditText
@@ -20,7 +27,8 @@ class AddEditExerciseActivity : AppCompatActivity() {
     private lateinit var saveBtn: Button
 
     private lateinit var viewModel: ExerciseViewModel
-    private var exerciseID = -1
+    private var id = -1
+    private var workoutID = -1 // <-- 1. Add a variable to hold the workout ID
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,13 +46,16 @@ class AddEditExerciseActivity : AppCompatActivity() {
         weightEdt = findViewById(R.id.idEdtWeight)
         saveBtn = findViewById(R.id.idBtnSaveExercise)
 
-        val exerciseType = intent.getStringExtra("exerciseType")
+        // <-- 2. Get the workoutId from the Intent
+        workoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1)
+
+        val exerciseType = intent.getStringExtra(EXTRA_EXERCISE_TYPE)
         if (exerciseType == "Edit") {
-            val name = intent.getStringExtra("exerciseName")
-            val sets = intent.getIntExtra("exerciseSets", 0)
-            val reps = intent.getIntExtra("exerciseReps", 0)
-            val weight = intent.getFloatExtra("exerciseWeight", 0f)
-            exerciseID = intent.getIntExtra("exerciseId", -1)
+            val name = intent.getStringExtra(EXTRA_EXERCISE_NAME)
+            val sets = intent.getIntExtra(EXTRA_EXERCISE_SETS, 0)
+            val reps = intent.getIntExtra(EXTRA_EXERCISE_REPS, 0)
+            val weight = intent.getFloatExtra(EXTRA_EXERCISE_WEIGHT, 0f)
+            id = intent.getIntExtra(EXTRA_EXERCISE_ID, -1)
 
             saveBtn.text = "Update Exercise"
             exerciseNameEdt.setText(name)
@@ -59,19 +70,24 @@ class AddEditExerciseActivity : AppCompatActivity() {
             val name = exerciseNameEdt.text.toString()
             val sets = setsEdt.text.toString().toIntOrNull() ?: 0
             val reps = repsEdt.text.toString().toIntOrNull() ?: 0
-            val weight = weightEdt.text.toString().toFloatOrNull() ?: 0f
+            // The weight from the EditText is a floating point number
+            val weight = weightEdt.text.toString().toDoubleOrNull() ?: 0.0
 
-            if (name.isNotEmpty() && sets > 0 && reps > 0) {
-                val exercise = ExerciseModel(name, sets, reps, weight)
+            // Ensure we have a valid workout ID before saving
+            if (name.isNotEmpty() && sets > 0 && reps > 0 && workoutID != -1) {
+
                 if (exerciseType == "Edit") {
-                    exercise.id = exerciseID
+                    // For updating, create the model with the existing exerciseID
+                    val exercise = ExerciseModel(id, workoutID, name, sets, reps, weight)
                     viewModel.updateExercise(exercise)
                     Toast.makeText(this, "Exercise Updated", Toast.LENGTH_LONG).show()
                 } else {
+                    // For adding, create the model with a default id of 0
+                    val exercise = ExerciseModel(0, workoutID, name, sets, reps, weight)
                     viewModel.addExercise(exercise)
                     Toast.makeText(this, "$name Added", Toast.LENGTH_LONG).show()
                 }
-                startActivity(Intent(applicationContext, MainActivity::class.java))
+                // It's better to go back to the ExerciseActivity, not MainActivity
                 finish()
             } else {
                 Toast.makeText(this, "Please fill all fields correctly", Toast.LENGTH_LONG).show()

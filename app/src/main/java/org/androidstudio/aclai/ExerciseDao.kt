@@ -15,6 +15,6 @@ interface ExerciseDao {
     @Update
     suspend fun update(exercise: ExerciseModel)
 
-    @Query("SELECT * FROM exerciseTable ORDER BY id ASC")
+    @Query("SELECT * FROM exercisesTable ORDER BY id ASC")
     fun getAllExercises(): LiveData<List<ExerciseModel>>
 }
