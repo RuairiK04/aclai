@@ -15,6 +15,13 @@ class WorkoutRVAdapter(
 
     private val allWorkouts = ArrayList<WorkoutModel>()
 
+    private var deleteMode = false
+
+    fun setDeleteMode(enabled: Boolean) {
+        deleteMode = enabled
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val workoutNameTV: TextView = itemView.findViewById(R.id.idTVWorkoutName)
         val workoutDescTV: TextView = itemView.findViewById(R.id.idTVWorkoutDescription)
