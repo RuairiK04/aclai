@@ -1,6 +1,7 @@
 package org.androidstudio.aclai
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ExerciseRVAdapter(
-    private val exerciseClickDeleteInterface: ExerciseClickDeleteInterface,
-    private val exerciseClickInterface: ExerciseClickInterface
+    private val context: Context,
+    private val onExerciseListener: OnExerciseListener
 ) : RecyclerView.Adapter<ExerciseRVAdapter.ViewHolder>() {
 
     // List of exercises
     private val allExercises = ArrayList<ExerciseModel>()
+
+    interface OnExerciseListener {
+        fun onExerciseClick(exercise: ExerciseModel)
+        fun onExerciseDeleteClick(exercise: ExerciseModel)
+    }
 
     // ViewHolder class
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -46,12 +52,12 @@ class ExerciseRVAdapter(
 
         // Click for delete icon
         holder.deleteIV.setOnClickListener {
-            exerciseClickDeleteInterface.onDeleteIconClick(exercise)
+            onExerciseListener.onExerciseDeleteClick(exercise)
         }
 
         // Click for editing the exercise
         holder.itemView.setOnClickListener {
-            exerciseClickInterface.onExerciseClick(exercise)
+            onExerciseListener.onExerciseClick(exercise)
         }
     }
 
@@ -63,14 +69,4 @@ class ExerciseRVAdapter(
         allExercises.addAll(newList)
         notifyDataSetChanged()
     }
-}
-
-// Delete click interface
-interface ExerciseClickDeleteInterface {
-    fun onDeleteIconClick(exercise: ExerciseModel)
-}
-
-// Row click interface (for update)
-interface ExerciseClickInterface {
-    fun onExerciseClick(exercise: ExerciseModel)
 }

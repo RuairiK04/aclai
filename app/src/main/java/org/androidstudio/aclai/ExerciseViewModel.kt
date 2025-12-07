@@ -18,6 +18,10 @@ class ExerciseViewModel(application: Application) : AndroidViewModel(application
         allExercises = repository.allExercises
     }
 
+    fun getExercisesForWorkout(workoutId: Int): LiveData<List<ExerciseModel>> {
+        return repository.getExercisesForWorkout(workoutId)
+    }
+
     fun addExercise(exercise: ExerciseModel) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(exercise)
     }

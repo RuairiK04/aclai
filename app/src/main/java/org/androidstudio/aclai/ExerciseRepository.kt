@@ -7,6 +7,11 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao) {
     // Get all exercises
     val allExercises: LiveData<List<ExerciseModel>> = exerciseDao.getAllExercises()
 
+    // Get exercises for a specific workout
+    fun getExercisesForWorkout(workoutId: Int): LiveData<List<ExerciseModel>> {
+        return exerciseDao.getExercisesForWorkout(workoutId)
+    }
+
     // Insert exercise
     suspend fun insert(exercise: ExerciseModel) {
         exerciseDao.insert(exercise)
