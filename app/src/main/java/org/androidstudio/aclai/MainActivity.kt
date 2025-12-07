@@ -2,9 +2,6 @@ package org.androidstudio.aclai
 
 import android.content.Intent
 import android.os.Bundle
-// Import android.view.Menu
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -12,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         // Toolbar
         val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
-        setSupportActionBar(toolbar) // This is correct!
+        setSupportActionBar(toolbar)
 
         toolbar.setNavigationOnClickListener {
             deleteMode = !deleteMode
@@ -33,6 +31,11 @@ class MainActivity : AppCompatActivity() {
 
             val msg = if (deleteMode) "Delete mode ON" else "Delete mode OFF"
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        }
+
+        val fab: FloatingActionButton = findViewById(R.id.idFABAdd)
+        fab.setOnClickListener {
+            startActivity(Intent(this, AddEditWorkoutActivity::class.java))
         }
 
         // RecyclerView and other setup code
@@ -73,26 +76,5 @@ class MainActivity : AppCompatActivity() {
         workoutViewModel.allWorkouts.observe(this, Observer { list ->
             list?.let { workoutAdapter.updateList(it) }
         })
-    }
-
-    // vvvvv  ADD THIS ENTIRE FUNCTION  vvvvv
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // This line inflates your menu resource file and adds the items to the app bar.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-    // ^^^^^  ADD THIS ENTIRE FUNCTION  ^^^^^
-
-    // This function will now work correctly because the menu item exists.
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_add -> {
-                // The caret was here, indicating your focus.
-                // This correctly starts the activity.
-                startActivity(Intent(this, AddEditWorkoutActivity::class.java))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 }
