@@ -1,35 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/idTVWorkoutName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Workout Name"
-        android:textStyle="bold"
-        android:textSize="18sp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/idTVWorkoutDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description:" />
+        <TextView
+            android:id="@+id/idTVWorkoutName"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Workout Name"/>
 
-    <TextView
-        android:id="@+id/idTVWorkoutCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Category:" />
+        <TextView
+            android:id="@+id/idTVWorkoutDescription"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"/>
+
+        <TextView
+            android:id="@+id/idTVWorkoutCategory"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"/>
+
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/idIVDeleteWorkout"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:src="@android:drawable/ic_delete"
-        android:layout_gravity="end" />
-
+        android:contentDescription="Delete Workout"
+        android:padding="4dp"/>
 </LinearLayout>

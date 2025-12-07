@@ -23,9 +23,8 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     //Find user by username (for login)
-    fun getUserByUsername(username: String): LiveData<UserModel?> {
-        return UserDao.getUserByUsername(username)
-    }
+    //fun getUserByUsername(username: String): LiveData<UserModel?> {
+        //return UserDao.getUserByUsername(username)
+    //}
 }
 
-private fun UserDao.Companion.getUserByUsername(username: String): LiveData<UserModel?> {}

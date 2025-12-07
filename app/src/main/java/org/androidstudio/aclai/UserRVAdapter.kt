@@ -17,7 +17,8 @@ class UserRVAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val usernameTV: TextView = itemView.findViewById(R.id.idTVUsername)
-        val emailTV: TextView = itemView.findViewById(R.id.idTVEmail)
+        // CORRECT
+        val emailTV: TextView = itemView.findViewById(R.id.idTVUserEmail)
         val deleteIV: ImageView = itemView.findViewById(R.id.idIVDeleteUser)
     }
 
