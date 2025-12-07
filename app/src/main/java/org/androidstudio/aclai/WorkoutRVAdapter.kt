@@ -9,17 +9,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class WorkoutRVAdapter(
-    private val workoutClickDeleteInterface: WorkoutClickDeleteInterface,
-    private val workoutClickInterface: WorkoutClickInterface
+    private val workoutClickListener: WorkoutClickListener
 ) : RecyclerView.Adapter<WorkoutRVAdapter.ViewHolder>() {
 
     private val allWorkouts = ArrayList<WorkoutModel>()
 
-    private var deleteMode = false
-
-    fun setDeleteMode(enabled: Boolean) {
-        deleteMode = enabled
-        notifyDataSetChanged()
+    interface WorkoutClickListener {
+        fun onWorkoutClick(workout: WorkoutModel)
+        fun onDeleteIconClick(workout: WorkoutModel)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -47,11 +44,11 @@ class WorkoutRVAdapter(
         holder.categoryTV.text = "Category: ${workout.category}"
 
         holder.deleteIV.setOnClickListener {
-            workoutClickDeleteInterface.onDeleteIconClick(workout)
+            workoutClickListener.onDeleteIconClick(workout)
         }
 
         holder.itemView.setOnClickListener {
-            workoutClickInterface.onWorkoutClick(workout)
+            workoutClickListener.onWorkoutClick(workout)
         }
     }
 
@@ -63,12 +60,4 @@ class WorkoutRVAdapter(
         allWorkouts.addAll(newList)
         notifyDataSetChanged()
     }
-}
-
-interface WorkoutClickDeleteInterface {
-    fun onDeleteIconClick(workout: WorkoutModel)
-}
-
-interface WorkoutClickInterface {
-    fun onWorkoutClick(workout: WorkoutModel)
 }

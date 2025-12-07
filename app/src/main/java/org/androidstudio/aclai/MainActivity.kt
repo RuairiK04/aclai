@@ -11,11 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener {
 
     private lateinit var workoutViewModel: WorkoutViewModel
     private lateinit var workoutAdapter: WorkoutRVAdapter
-    private var deleteMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,14 +23,6 @@ class MainActivity : AppCompatActivity() {
         // Toolbar
         val toolbar = findViewById<MaterialToolbar>(R.id.topAppBar)
         setSupportActionBar(toolbar)
-
-        toolbar.setNavigationOnClickListener {
-            deleteMode = !deleteMode
-            workoutAdapter.setDeleteMode(deleteMode)
-
-            val msg = if (deleteMode) "Delete mode ON" else "Delete mode OFF"
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-        }
 
         val fab: FloatingActionButton = findViewById(R.id.idFABAdd)
         fab.setOnClickListener {
@@ -43,28 +34,7 @@ class MainActivity : AppCompatActivity() {
         val workoutRV = findViewById<RecyclerView>(R.id.idRVWorkouts)
         workoutRV.layoutManager = LinearLayoutManager(this)
 
-        workoutAdapter = WorkoutRVAdapter(
-            workoutClickDeleteInterface = object : WorkoutClickDeleteInterface {
-                override fun onDeleteIconClick(workout: WorkoutModel) {
-                    if (deleteMode) {
-                        workoutViewModel.deleteWorkout(workout)
-                        Toast.makeText(this@MainActivity, "Workout Deleted", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
-            workoutClickInterface = object : WorkoutClickInterface {
-                override fun onWorkoutClick(workout: WorkoutModel) {
-                    if (!deleteMode) {
-                        val intent = Intent(this@MainActivity, ExerciseActivity::class.java).apply {
-                            putExtra(ExerciseActivity.EXTRA_WORKOUT_ID, workout.id)
-                            putExtra(ExerciseActivity.EXTRA_WORKOUT_NAME, workout.workoutname)
-                        }
-                        startActivity(intent)
-                    }
-                }
-            }
-        )
-
+        workoutAdapter = WorkoutRVAdapter(this)
         workoutRV.adapter = workoutAdapter
 
         // ViewModel
@@ -76,5 +46,18 @@ class MainActivity : AppCompatActivity() {
         workoutViewModel.allWorkouts.observe(this, Observer { list ->
             list?.let { workoutAdapter.updateList(it) }
         })
+    }
+
+    override fun onWorkoutClick(workout: WorkoutModel) {
+        val intent = Intent(this@MainActivity, ExerciseActivity::class.java).apply {
+            putExtra(ExerciseActivity.EXTRA_WORKOUT_ID, workout.id)
+            putExtra(ExerciseActivity.EXTRA_WORKOUT_NAME, workout.workoutname)
+        }
+        startActivity(intent)
+    }
+
+    override fun onDeleteIconClick(workout: WorkoutModel) {
+        workoutViewModel.deleteWorkout(workout)
+        Toast.makeText(this, "Workout Deleted", Toast.LENGTH_SHORT).show()
     }
 }
