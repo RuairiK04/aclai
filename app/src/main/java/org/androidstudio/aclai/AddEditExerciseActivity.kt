@@ -25,6 +25,7 @@ class AddEditExerciseActivity : AppCompatActivity() {
     private lateinit var repsEdt: EditText
     private lateinit var weightEdt: EditText
     private lateinit var saveBtn: Button
+    private lateinit var cancelBtn: Button
 
     private lateinit var viewModel: ExerciseViewModel
     private var id = -1
@@ -45,6 +46,7 @@ class AddEditExerciseActivity : AppCompatActivity() {
         repsEdt = findViewById(R.id.idEdtReps)
         weightEdt = findViewById(R.id.idEdtWeight)
         saveBtn = findViewById(R.id.idBtnSaveExercise)
+        cancelBtn = findViewById(R.id.idBtnCancel)
 
         // <-- 2. Get the workoutId from the Intent
         workoutID = intent.getIntExtra(EXTRA_WORKOUT_ID, -1)
@@ -92,6 +94,10 @@ class AddEditExerciseActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Please fill all fields correctly", Toast.LENGTH_LONG).show()
             }
+        }
+
+        cancelBtn.setOnClickListener {
+            finish()
         }
     }
 }

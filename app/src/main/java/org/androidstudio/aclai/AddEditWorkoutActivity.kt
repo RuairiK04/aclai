@@ -1,6 +1,7 @@
 package org.androidstudio.aclai
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -15,6 +16,7 @@ class AddEditWorkoutActivity : AppCompatActivity() {
     private lateinit var workoutDescEdt: EditText
     private lateinit var categoryEdt: EditText
     private lateinit var saveBtn: Button
+    private lateinit var cancelBtn: Button
 
     private lateinit var viewModel: WorkoutViewModel
     private var workoutID = -1
@@ -33,6 +35,7 @@ class AddEditWorkoutActivity : AppCompatActivity() {
         workoutDescEdt = findViewById(R.id.idEdtWorkoutDesc)
         categoryEdt = findViewById(R.id.idEdtWorkoutCategory)
         saveBtn = findViewById(R.id.idBtnSaveWorkout)
+        cancelBtn = findViewById(R.id.idBtnCancel)
 
         val workoutType = intent.getStringExtra("workoutType")
         if (workoutType == "Edit") {
@@ -64,11 +67,15 @@ class AddEditWorkoutActivity : AppCompatActivity() {
                     viewModel.addWorkout(workout)
                     Toast.makeText(this, "$name Added", Toast.LENGTH_LONG).show()
                 }
-                startActivity(Intent(applicationContext, MainActivity::class.java))
+                setResult(Activity.RESULT_OK)
                 finish()
             } else {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_LONG).show()
             }
+        }
+
+        cancelBtn.setOnClickListener {
+            finish()
         }
     }
 }

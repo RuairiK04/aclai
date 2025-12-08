@@ -31,12 +31,29 @@
             android:hint="Category"
             android:inputType="textPersonName" />
 
-        <Button
-            android:id="@+id/idBtnSaveWorkout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save Workout"
-            android:layout_marginTop="16dp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/idBtnCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancel"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/idBtnSaveWorkout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save Workout"
+                android:layout_marginStart="8dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
