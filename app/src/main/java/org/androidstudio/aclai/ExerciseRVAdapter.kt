@@ -5,7 +5,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -28,7 +27,6 @@ class ExerciseRVAdapter(
         val setsTV: TextView = itemView.findViewById(R.id.idTVSets)
         val repsTV: TextView = itemView.findViewById(R.id.idTVReps)
         val weightTV: TextView = itemView.findViewById(R.id.idTVWeight)
-        val deleteIV: ImageView = itemView.findViewById(R.id.idIVDeleteExercise)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -50,11 +48,6 @@ class ExerciseRVAdapter(
         holder.repsTV.text = "Reps: ${exercise.reps}"
         holder.weightTV.text = "Weight: ${exercise.weight}kg"
 
-        // Click for delete icon
-        holder.deleteIV.setOnClickListener {
-            onExerciseListener.onExerciseDeleteClick(exercise)
-        }
-
         // Click for editing the exercise
         holder.itemView.setOnClickListener {
             onExerciseListener.onExerciseClick(exercise)
@@ -68,5 +61,9 @@ class ExerciseRVAdapter(
         allExercises.clear()
         allExercises.addAll(newList)
         notifyDataSetChanged()
+    }
+
+    fun getExerciseAt(position: Int): ExerciseModel {
+        return allExercises[position]
     }
 }

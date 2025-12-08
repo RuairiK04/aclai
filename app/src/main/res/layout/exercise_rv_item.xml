@@ -56,14 +56,6 @@
                 android:text="Weight: 0.0kg"/>
         </LinearLayout>
 
-
-        <ImageView
-            android:id="@+id/idIVDeleteExercise"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@android:drawable/ic_delete"
-            android:contentDescription="Delete Exercise"
-            android:padding="4dp"/>
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

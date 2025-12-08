@@ -12,14 +12,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 
 class ExerciseActivity : AppCompatActivity(), ExerciseRVAdapter.OnExerciseListener {
 
     private lateinit var viewModel: ExerciseViewModel
+    private lateinit var exerciseRVAdapter: ExerciseRVAdapter
+    private lateinit var exercisesRV: RecyclerView
 
     companion object {
         const val EXTRA_WORKOUT_ID = "extra_workout_id"
@@ -71,9 +75,9 @@ class ExerciseActivity : AppCompatActivity(), ExerciseRVAdapter.OnExerciseListen
             startActivity(intent)
         }
 
-        val exercisesRV: RecyclerView = findViewById(R.id.idRVExercises)
+        exercisesRV = findViewById(R.id.idRVExercises)
         exercisesRV.layoutManager = LinearLayoutManager(this)
-        val exerciseRVAdapter = ExerciseRVAdapter(this, this)
+        exerciseRVAdapter = ExerciseRVAdapter(this, this)
         exercisesRV.adapter = exerciseRVAdapter
 
         viewModel = ViewModelProvider(
@@ -83,6 +87,29 @@ class ExerciseActivity : AppCompatActivity(), ExerciseRVAdapter.OnExerciseListen
         viewModel.getExercisesForWorkout(workoutId).observe(this, {
             exerciseRVAdapter.updateList(it)
         })
+
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val exercise = exerciseRVAdapter.getExerciseAt(position)
+                viewModel.deleteExercise(exercise)
+
+                Snackbar.make(exercisesRV, "Exercise Deleted", Snackbar.LENGTH_LONG).apply {
+                    setAction("Undo") {
+                        viewModel.addExercise(exercise)
+                    }
+                    show()
+                }
+            }
+        }).attachToRecyclerView(exercisesRV)
     }
 
     private fun showTimerDialog() {
