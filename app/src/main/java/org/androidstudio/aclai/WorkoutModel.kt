@@ -7,9 +7,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "workoutTable")
 class WorkoutModel(
     @ColumnInfo(name = "workoutname") val workoutname: String,
-    @ColumnInfo(name = "workoutdescription") val workoutdescription: String,
-    @ColumnInfo(name = "category") val category: String,
-    ) {
+    @ColumnInfo(name = "workoutdescription") val workoutdescription: String? = null,
+    @ColumnInfo(name = "category") val category: String? = null,
+) {
     @PrimaryKey(autoGenerate = true)
     var id = 0
 }

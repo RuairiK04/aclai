@@ -2,7 +2,6 @@ package org.androidstudio.aclai
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -57,8 +56,8 @@ class AddEditWorkoutActivity : AppCompatActivity() {
             val desc = workoutDescEdt.text.toString()
             val category = categoryEdt.text.toString()
 
-            if (name.isNotEmpty() && desc.isNotEmpty() && category.isNotEmpty()) {
-                val workout = WorkoutModel(name, desc, category)
+            if (name.isNotEmpty()) {
+                val workout = WorkoutModel(name, desc.ifEmpty { null }, category.ifEmpty { null })
                 if (workoutType == "Edit") {
                     workout.id = workoutID
                     viewModel.updateWorkout(workout)
@@ -70,7 +69,7 @@ class AddEditWorkoutActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_OK)
                 finish()
             } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Please enter a workout name", Toast.LENGTH_LONG).show()
             }
         }
 

@@ -14,7 +14,8 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
 
     init {
         val dao = AppDatabase.getDatabase(application).getWorkoutDao()
-        repository = WorkoutRepository(dao)
+        val exerciseDao = AppDatabase.getDatabase(application).getExerciseDao()
+        repository = WorkoutRepository(dao, exerciseDao)
         allWorkouts = repository.allWorkouts
     }
 
@@ -24,6 +25,10 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
 
     fun addWorkout(workout: WorkoutModel) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(workout)
+    }
+
+    fun addExercise(exercise: ExerciseModel) = viewModelScope.launch(Dispatchers.IO) {
+        repository.insertExercise(exercise)
     }
 
     fun updateWorkout(workout: WorkoutModel) = viewModelScope.launch(Dispatchers.IO) {

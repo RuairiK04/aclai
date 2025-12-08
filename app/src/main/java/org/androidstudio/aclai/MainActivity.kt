@@ -18,10 +18,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener {
@@ -72,6 +74,33 @@ class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener 
         workoutViewModel.allWorkouts.observe(this, Observer { list ->
             list?.let { workoutAdapter.updateList(it) }
         })
+
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val workoutWithExercises = workoutAdapter.getWorkoutAt(position)
+                val workout = workoutWithExercises.workout
+                workoutViewModel.deleteWorkout(workout)
+
+                Snackbar.make(workoutRV, "Workout Deleted", Snackbar.LENGTH_LONG).apply {
+                    setAction("Undo") {
+                        workoutViewModel.addWorkout(workout)
+                        workoutWithExercises.exercises.forEach { exercise ->
+                            workoutViewModel.addExercise(exercise)
+                        }
+                    }
+                    show()
+                }
+            }
+        }).attachToRecyclerView(workoutRV)
 
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
@@ -166,10 +195,5 @@ class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener 
             putExtra(ExerciseActivity.EXTRA_WORKOUT_NAME, workout.workoutname)
         }
         startActivity(intent)
-    }
-
-    override fun onDeleteIconClick(workout: WorkoutModel) {
-        workoutViewModel.deleteWorkout(workout)
-        Toast.makeText(this, "Workout Deleted", Toast.LENGTH_SHORT).show()
     }
 }

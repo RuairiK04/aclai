@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -16,14 +15,12 @@ class WorkoutRVAdapter(
 
     interface WorkoutClickListener {
         fun onWorkoutClick(workout: WorkoutModel)
-        fun onDeleteIconClick(workout: WorkoutModel)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val workoutNameTV: TextView = itemView.findViewById(R.id.idTVWorkoutName)
         val workoutDescTV: TextView = itemView.findViewById(R.id.idTVWorkoutDescription)
         val categoryTV: TextView = itemView.findViewById(R.id.idTVWorkoutCategory)
-        val deleteIV: ImageView = itemView.findViewById(R.id.idIVDeleteWorkout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,11 +38,19 @@ class WorkoutRVAdapter(
         val workout = workoutWithExercises.workout
 
         holder.workoutNameTV.text = workout.workoutname
-        holder.workoutDescTV.text = "Description: ${workout.workoutdescription}"
-        holder.categoryTV.text = "Category: ${workout.category}"
 
-        holder.deleteIV.setOnClickListener {
-            workoutClickListener.onDeleteIconClick(workout)
+        if (!workout.workoutdescription.isNullOrEmpty()) {
+            holder.workoutDescTV.visibility = View.VISIBLE
+            holder.workoutDescTV.text = "Description: ${workout.workoutdescription}"
+        } else {
+            holder.workoutDescTV.visibility = View.GONE
+        }
+
+        if (!workout.category.isNullOrEmpty()) {
+            holder.categoryTV.visibility = View.VISIBLE
+            holder.categoryTV.text = "Category: ${workout.category}"
+        } else {
+            holder.categoryTV.visibility = View.GONE
         }
 
         holder.itemView.setOnClickListener {
@@ -60,5 +65,9 @@ class WorkoutRVAdapter(
         allWorkouts.clear()
         allWorkouts.addAll(newList)
         notifyDataSetChanged()
+    }
+
+    fun getWorkoutAt(position: Int): WorkoutWithExercises {
+        return allWorkouts[position]
     }
 }
