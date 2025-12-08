@@ -2,9 +2,14 @@ package org.androidstudio.aclai
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuItem
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +42,22 @@ class ExerciseActivity : AppCompatActivity(), ExerciseRVAdapter.OnExerciseListen
             finish()
         }
 
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_home -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    true
+                }
+                R.id.action_timer -> {
+                    showTimerDialog()
+                    true
+                }
+                else -> false
+            }
+        }
+
         if (workoutId == -1) {
             // Handle error: No workout ID was passed
             finish()
@@ -64,6 +85,39 @@ class ExerciseActivity : AppCompatActivity(), ExerciseRVAdapter.OnExerciseListen
         })
     }
 
+    private fun showTimerDialog() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_timer, null)
+        val editTextTimer = dialogView.findViewById<EditText>(R.id.editTextTimer)
+        val buttonStartTimer = dialogView.findViewById<Button>(R.id.buttonStartTimer)
+        val textViewTimer = dialogView.findViewById<TextView>(R.id.textViewTimer)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+
+        buttonStartTimer.setOnClickListener {
+            val timeInSeconds = editTextTimer.text.toString().toLongOrNull()
+            if (timeInSeconds != null && timeInSeconds > 0) {
+                object : CountDownTimer(timeInSeconds * 1000, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        textViewTimer.text = "${millisUntilFinished / 1000}s"
+                    }
+
+                    override fun onFinish() {
+                        textViewTimer.text = "0s"
+                        Toast.makeText(this@ExerciseActivity, "Rest Finished!", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
+                }.start()
+            } else {
+                Toast.makeText(this, "Please enter a valid time", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog.show()
+    }
+
+
     override fun onExerciseClick(exercise: ExerciseModel) {
         val intent = Intent(this, AddEditExerciseActivity::class.java)
         intent.putExtra(AddEditExerciseActivity.EXTRA_EXERCISE_TYPE, "Edit")
@@ -84,17 +138,5 @@ class ExerciseActivity : AppCompatActivity(), ExerciseRVAdapter.OnExerciseListen
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.exercise_activity_menu, menu)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_home -> {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 }

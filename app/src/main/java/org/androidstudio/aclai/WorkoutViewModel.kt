@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 
 class WorkoutViewModel(application: Application) : AndroidViewModel(application) {
 
-    val allWorkouts: LiveData<List<WorkoutModel>>
+    val allWorkouts: LiveData<List<WorkoutWithExercises>>
     private val repository: WorkoutRepository
 
     init {
@@ -18,10 +18,10 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         allWorkouts = repository.allWorkouts
     }
 
-    fun getExercisesForWorkout(workoutId: Int): LiveData<WorkoutWithExercises> {
-
+    fun getWorkoutWithExercises(workoutId: Int): LiveData<WorkoutWithExercises> {
         return repository.getWorkoutWithExercises(workoutId)
     }
+
     fun addWorkout(workout: WorkoutModel) = viewModelScope.launch(Dispatchers.IO) {
         repository.insert(workout)
     }

@@ -12,7 +12,7 @@ class WorkoutRVAdapter(
     private val workoutClickListener: WorkoutClickListener
 ) : RecyclerView.Adapter<WorkoutRVAdapter.ViewHolder>() {
 
-    private val allWorkouts = ArrayList<WorkoutModel>()
+    private val allWorkouts = ArrayList<WorkoutWithExercises>()
 
     interface WorkoutClickListener {
         fun onWorkoutClick(workout: WorkoutModel)
@@ -37,7 +37,8 @@ class WorkoutRVAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val workout = allWorkouts[position]
+        val workoutWithExercises = allWorkouts[position]
+        val workout = workoutWithExercises.workout
 
         holder.workoutNameTV.text = workout.workoutname
         holder.workoutDescTV.text = "Description: ${workout.workoutdescription}"
@@ -55,7 +56,7 @@ class WorkoutRVAdapter(
     override fun getItemCount(): Int = allWorkouts.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newList: List<WorkoutModel>) {
+    fun updateList(newList: List<WorkoutWithExercises>) {
         allWorkouts.clear()
         allWorkouts.addAll(newList)
         notifyDataSetChanged()

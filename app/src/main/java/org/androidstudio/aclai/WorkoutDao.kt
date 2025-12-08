@@ -15,9 +15,9 @@ interface WorkoutDao {
     @Update
     suspend fun update(workout: WorkoutModel)
 
-    @Query("SELECT * FROM workoutTable ORDER BY id ASC")
-    fun getAllWorkouts(): LiveData<List<WorkoutModel>>
-
+    @Transaction
+    @Query("SELECT * FROM workoutTable")
+    fun getAllWorkoutsWithExercises(): LiveData<List<WorkoutWithExercises>>
 
     @Transaction
     @Query("SELECT * FROM workoutTable WHERE id = :workoutId")

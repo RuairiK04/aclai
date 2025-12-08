@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_timer"
+        android:title="Timer"
+        android:icon="@drawable/ic_timer"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_home"
         android:title="@string/home"
         android:icon="@drawable/ic_home"
