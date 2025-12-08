@@ -1,5 +1,6 @@
 package org.androidstudio.aclai
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -12,6 +13,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -28,6 +30,12 @@ class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener 
     private lateinit var workoutAdapter: WorkoutRVAdapter
     private lateinit var sharedPreferences: SharedPreferences
 
+    private val addWorkoutLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "Workout Saved", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     companion object {
         const val PREFS_NAME = "notification_prefs"
         const val PREF_KEY_INTERVAL = "notification_interval"
@@ -43,7 +51,8 @@ class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener 
 
         val fab: FloatingActionButton = findViewById(R.id.idFABAdd)
         fab.setOnClickListener {
-            startActivity(Intent(this, AddEditWorkoutActivity::class.java))
+            val intent = Intent(this, AddEditWorkoutActivity::class.java)
+            addWorkoutLauncher.launch(intent)
         }
 
         // RecyclerView and other setup code
