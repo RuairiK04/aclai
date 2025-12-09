@@ -9,9 +9,8 @@ import androidx.room.RoomDatabase
     entities = [
         ExerciseModel::class,
         WorkoutModel::class,
-        UserModel::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -19,7 +18,6 @@ abstract class AppDatabase : RoomDatabase() {
     // DAOs
     abstract fun getExerciseDao(): ExerciseDao
     abstract fun getWorkoutDao(): WorkoutDao
-    abstract fun getUserDao(): UserDao
 
     companion object {
 
