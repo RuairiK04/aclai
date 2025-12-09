@@ -29,6 +29,7 @@ import java.util.Calendar
 class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener {
 
     private lateinit var workoutViewModel: WorkoutViewModel
+    private lateinit var exerciseViewModel: ExerciseViewModel
     private lateinit var workoutAdapter: WorkoutRVAdapter
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -71,6 +72,11 @@ class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener 
             ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         )[WorkoutViewModel::class.java]
 
+        exerciseViewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        )[ExerciseViewModel::class.java]
+
         workoutViewModel.allWorkouts.observe(this, Observer { list ->
             list?.let { workoutAdapter.updateList(it) }
         })
@@ -88,17 +94,26 @@ class MainActivity : AppCompatActivity(), WorkoutRVAdapter.WorkoutClickListener 
                 val position = viewHolder.adapterPosition
                 val workoutWithExercises = workoutAdapter.getWorkoutAt(position)
                 val workout = workoutWithExercises.workout
-                workoutViewModel.deleteWorkout(workout)
 
-                Snackbar.make(workoutRV, "Workout Deleted", Snackbar.LENGTH_LONG).apply {
-                    setAction("Undo") {
-                        workoutViewModel.addWorkout(workout)
-                        workoutWithExercises.exercises.forEach { exercise ->
-                            workoutViewModel.addExercise(exercise)
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle("Delete Workout")
+                    .setMessage("Are you sure you want to delete this workout?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        workoutViewModel.deleteWorkout(workout)
+                        Snackbar.make(workoutRV, "Workout Deleted", Snackbar.LENGTH_LONG).apply {
+                            setAction("Undo") {
+                                workoutViewModel.addWorkout(workout)
+                                workoutWithExercises.exercises.forEach { exercise ->
+                                    exerciseViewModel.addExercise(exercise)
+                                }
+                            }
+                            show()
                         }
                     }
-                    show()
-                }
+                    .setNegativeButton("No") { _, _ ->
+                        workoutAdapter.notifyItemChanged(position)
+                    }
+                    .show()
             }
         }).attachToRecyclerView(workoutRV)
 

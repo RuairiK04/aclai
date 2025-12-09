@@ -48,13 +48,7 @@
         </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/idIVDeleteWorkout"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@android:drawable/ic_delete"
-            android:contentDescription="Delete Workout"
-            android:padding="4dp"/>
+
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

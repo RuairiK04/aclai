@@ -100,14 +100,23 @@ class ExerciseActivity : AppCompatActivity(), ExerciseRVAdapter.OnExerciseListen
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val exercise = exerciseRVAdapter.getExerciseAt(position)
-                viewModel.deleteExercise(exercise)
 
-                Snackbar.make(exercisesRV, "Exercise Deleted", Snackbar.LENGTH_LONG).apply {
-                    setAction("Undo") {
-                        viewModel.addExercise(exercise)
+                AlertDialog.Builder(this@ExerciseActivity)
+                    .setTitle("Delete Exercise")
+                    .setMessage("Are you sure you want to delete this exercise?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        viewModel.deleteExercise(exercise)
+                        Snackbar.make(exercisesRV, "Exercise Deleted", Snackbar.LENGTH_LONG).apply {
+                            setAction("Undo") {
+                                viewModel.addExercise(exercise)
+                            }
+                            show()
+                        }
                     }
-                    show()
-                }
+                    .setNegativeButton("No") { _, _ ->
+                        exerciseRVAdapter.notifyItemChanged(position)
+                    }
+                    .show()
             }
         }).attachToRecyclerView(exercisesRV)
     }
@@ -155,11 +164,6 @@ class ExerciseActivity : AppCompatActivity(), ExerciseRVAdapter.OnExerciseListen
         intent.putExtra(AddEditExerciseActivity.EXTRA_EXERCISE_ID, exercise.id)
         intent.putExtra(AddEditExerciseActivity.EXTRA_WORKOUT_ID, exercise.workoutId)
         startActivity(intent)
-    }
-
-    override fun onExerciseDeleteClick(exercise: ExerciseModel) {
-        viewModel.deleteExercise(exercise)
-        Toast.makeText(this, "${exercise.exerciseName} deleted", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

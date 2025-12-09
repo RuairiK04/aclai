@@ -18,7 +18,6 @@ class ExerciseRVAdapter(
 
     interface OnExerciseListener {
         fun onExerciseClick(exercise: ExerciseModel)
-        fun onExerciseDeleteClick(exercise: ExerciseModel)
     }
 
     // ViewHolder class
